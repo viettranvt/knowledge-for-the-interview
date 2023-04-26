@@ -1,5 +1,15 @@
 # PATTERN
 
+## SOLID
+
+- **Single Responsibility Principle (S)**: Một lớp nên chỉ có một trách nhiệm duy nhất.
+- **Open/Closed Principle (O)**: Một lớp chỉ nên được mở rộng và không nên chỉnh sửa lớp đó
+- **Liskov Substitution Principle (L)**: Lớp con có thể thay thế lớp cha, nhưng không được thay tính chất của lớp cha đó.
+- **Interface Segregation Principle (I)**: Thay vì dùng 1 interface lớn, ta nên tách thành nhiều interface nhỏ, với nhiều mục đích cụ thể
+- **Dependency Inversion Principle (D)**: Các module cấp cao không nên phụ thuộc vào các module cấp thấp.
+
+---
+
 ## FACTORY PATTERN
 
 - Là một mẫu thiết kế phần mềm thuộc nhóm "Creational Pattern" (mẫu tạo đối tượng), cho phép tạo ra các đối tượng một cách trừu tượng hơn.

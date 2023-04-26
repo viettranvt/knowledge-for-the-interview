@@ -66,4 +66,25 @@
 - Nếu ứng dụng không giải phóng bộ nhớ đã được cấp phát cho các đối tượng không sử dụng nữa, các đối tượng đó sẽ tiếp tục tồn tại trong bộ nhớ và dần dần sẽ chiếm dụng bộ nhớ hệ thống, gây ra hiện tượng memory leak.
 - Hiện tượng này có thể gây ra sự chậm trễ hoặc đáng kể giảm hiệu suất của ứng dụng và có thể dẫn đến sự cố hệ thống nghiêm trọng.
 
+## Golang vs NodeJS
+
+- NodeJS là single thread còn golang là multi thread.
+- Ngôn ngữ lập trình: Node.js được viết bằng JavaScript, trong khi Golang được viết bằng Go.
+- Độ phổ biến: Node.js phổ biến hơn trong việc phát triển web, trong khi Golang được sử dụng nhiều trong các ứng dụng back-end.
+- Thời gian phát triển: Với Node.js, việc phát triển ứng dụng web nhanh hơn bởi vì nó sử dụng JavaScript và có nhiều module có sẵn. Trong khi đó, Golang cung cấp các công cụ mạnh mẽ để tạo ra ứng dụng đáp ứng nhanh hơn.
+- Độ tin cậy: Với tính năng goroutine và channel, Golang giúp việc quản lý lỗi tốt hơn so với Node.js. Node.js thường gặp phải vấn đề về đồng bộ hóa và phát triển ứng dụng lớn hơn.
+- Hiệu năng: Với tính năng goroutine và concurrency, Golang cung cấp hiệu năng cao hơn so với Node.js trong việc xử lý các tác vụ đồng thời.
+
+## Promise vs Async/Await:
+
+1. **Promise**
+
+   - Thường được dùng trong các trường hợp đơn giản và cần xử lý lỗi.
+   - Nếu xử lý nhiều tác vụ bất đồng bộ cùng nhau sẽ dẫn tới tình trạng **promise hell**
+
+2. **Async/Await**
+   - Thường được dùng trong các trường hợp phức tạp (thực hiện nhiều yêu cầu bất đồng bộ cùng một lúc).
+   - Nó làm cho mã trông giống với các thao tác đồng bộ và dễ hiểu hơn.
+   - Khi sử dụng Async/Await, người lập trình phải xử lý các lỗi và ngoại lệ được ném ra từ các hàm bất đồng bộ trong try-catch.
+
 ## Go Home [click here](./README.md)

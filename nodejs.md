@@ -1,8 +1,20 @@
 # BASIC JS
 
+## ECMAScript
+
+- ECMAScript là một chuẩn ngôn ngữ lập trình, định nghĩa các quy tắc và hướng dẫn để triển khai ngôn ngữ lập trình JavaScript
+- ECMAScript định nghĩa các quy tắc cơ bản để triển khai các tính năng của JavaScript, bao gồm cách xử lý các biến, hàm, lớp và cú pháp
+
+---
+
 ## JS engine
 
 - JS Engine là một chương trình phần mềm hoặc một thành phần của trình duyệt web được sử dụng để biên dịch và thực thi mã JavaScript
+- JS Engine thực hiện các bước sau:
+  1. **Phân tích cú pháp (parsing)**: JS engine phân tích cú pháp (syntax) của mã JavaScript để tạo ra một cấu trúc cây phân tích cú pháp (parse tree).
+  2. **Biên dịch (compiling)**: Sau khi cấu trúc cây phân tích cú pháp đã được tạo ra, JS engine sẽ biên dịch mã JavaScript sang mã máy (machine code). Để làm điều này, JS engine sử dụng một công cụ gọi là bộ biên dịch (compiler).
+  3. **Tối ưu hóa (optimizing)**: Một số JS engine như V8 có khả năng tối ưu hóa mã JavaScript bằng cách sử dụng một kỹ thuật gọi là "just-in-time (JIT)" compiling. JIT compiling sẽ biên dịch và tối ưu hóa mã JavaScript trong thời gian chạy, giúp mã chạy nhanh hơn.
+  4. **Thực thi (executing)**: JS engine thực thi mã máy đã được tạo ra bằng các bước trên, và đưa ra kết quả tương ứng. Trong trường hợp của JavaScript, kết quả thường là sự thay đổi trên các phần tử HTML trên trang web, hoặc các thông báo ghi ra console, v.v.
 
 ---
 
@@ -21,8 +33,8 @@
 - Nếu tác vụ đồng bộ thì sẽ được thực thi ngay
 - Còn nếu tác vụ bất đồng bộ sẽ được đẩy qua cho **WebAPIs/BrowserApis/NodeApis** để xử lý và trả kết quả vào trong **callback queue**
 - Trong back queue sẽ có 2 ngăn bao gồm: **micro task** và **macro task**
-  1. Micro task bao gồm: setTimeout, setInterval, setImmediate, requestAnimationFrame, I/O, UI rendering
-  2. Macro task bao gồm: process.nextTick, Promises, queueMicrotask, MutationObserver
+  1. Macro task bao gồm: setTimeout, setInterval, setImmediate, requestAnimationFrame, I/O, UI rendering
+  2. Micro task bao gồm: process.nextTick, Promises, queueMicrotask, MutationObserver
 - Về độ ưu tiên thì micro task sẽ được ưu tiên hơn macrotask
 - Event loop sẽ kiểm tra trong call stask còn tác vụ nào đang thực thi hay không, Nếu không nó sẽ đưa tác vụ từ trong call queue (cụ thể là các tác vụ trong micro task trước, nếu micro task hết mới tới lượt macro task) vào trong call stack để thực thi
 
@@ -66,14 +78,19 @@
 - Nếu ứng dụng không giải phóng bộ nhớ đã được cấp phát cho các đối tượng không sử dụng nữa, các đối tượng đó sẽ tiếp tục tồn tại trong bộ nhớ và dần dần sẽ chiếm dụng bộ nhớ hệ thống, gây ra hiện tượng memory leak.
 - Hiện tượng này có thể gây ra sự chậm trễ hoặc đáng kể giảm hiệu suất của ứng dụng và có thể dẫn đến sự cố hệ thống nghiêm trọng.
 
+---
+
 ## Golang vs NodeJS
 
 - NodeJS là single thread còn golang là multi thread.
+- Nodejs thông dịch còn golang là biên dịch
 - Ngôn ngữ lập trình: Node.js được viết bằng JavaScript, trong khi Golang được viết bằng Go.
 - Độ phổ biến: Node.js phổ biến hơn trong việc phát triển web, trong khi Golang được sử dụng nhiều trong các ứng dụng back-end.
 - Thời gian phát triển: Với Node.js, việc phát triển ứng dụng web nhanh hơn bởi vì nó sử dụng JavaScript và có nhiều module có sẵn. Trong khi đó, Golang cung cấp các công cụ mạnh mẽ để tạo ra ứng dụng đáp ứng nhanh hơn.
 - Độ tin cậy: Với tính năng goroutine và channel, Golang giúp việc quản lý lỗi tốt hơn so với Node.js. Node.js thường gặp phải vấn đề về đồng bộ hóa và phát triển ứng dụng lớn hơn.
 - Hiệu năng: Với tính năng goroutine và concurrency, Golang cung cấp hiệu năng cao hơn so với Node.js trong việc xử lý các tác vụ đồng thời.
+
+---
 
 ## Promise vs Async/Await:
 
@@ -86,5 +103,75 @@
    - Thường được dùng trong các trường hợp phức tạp (thực hiện nhiều yêu cầu bất đồng bộ cùng một lúc).
    - Nó làm cho mã trông giống với các thao tác đồng bộ và dễ hiểu hơn.
    - Khi sử dụng Async/Await, người lập trình phải xử lý các lỗi và ngoại lệ được ném ra từ các hàm bất đồng bộ trong try-catch.
+
+---
+
+## Closure
+
+- LLà một hàm được khai báo trong hàm khác và hàm này có thể truy cập và sử dụng biến bên ngoài phạm vi hàm đó.
+
+---
+
+## Prototype
+
+- Prototype chứa các thuộc tính và phương thức được chia sẻ cho tất cả các đối tượng được tạo ra từ nó.
+- VD
+
+  ```TS
+  function Person(name) {
+    this.name = name;
+  }
+
+
+  Person.prototype.greet = function() {
+    console.log(`Hello, my name is ${this.name}`);
+  };
+
+  let person1 = new Person('Alice');
+  let person2 = new Person('Bob');
+
+  person1.greet(); // Hello, my name is Alice
+  person2.greet(); // Hello, my name is Bob
+  ```
+
+---
+
+## Libuv
+
+- Libuv là thư viện c++ hỗ trợ đa nền tảng có trách nhiệm thực hiện thread pool, event loop và các xử lý bất đồng bộ trong nodeJS
+- Trong nodeJS các xử lý có block sẽ ủy quyền cho libuv và có các thread pool xử lý những hoạt động này
+
+---
+
+## Nodejs là gì ?
+
+- là một nền tảng để phát triển ứng dụng web dựa trên nền tảng tảng JavaScrip
+- Nodejs được phát triển theo hướng event driven (Mô hình hướng sự kiện)
+
+---
+
+## Tính chất NodeJS
+
+- Non-blocking I/O
+- Eventloop
+- Khả năng mở rộng: Node.js có khả năng xử lý hàng nghìn kết nối đồng thời mà không gây ra tình trạng đơ máy
+- Dễ dàng xây dựng các ứng dụng mạng: Node.js có các thư viện và framework hỗ trợ việc phát triển các ứng dụng mạng, bao gồm Express, Socket.io, Meteor, NestJS, etc
+- Được viết bằng ngôn ngữ JavaScript: Node.js cho phép các lập trình viên sử dụng JavaScript để xây dựng cả phía client và phía server của một ứng dụng mạng, tạo ra sự đồng nhất và dễ dàng trong việc quản lý mã nguồn.
+
+---
+
+## Luồng hoạt động của Nodejs
+
+- **Ngôn ngữ Javascript không thực hiện những công việc ở server-side như đọc file, truy vấn database mà nó ủy quyền cho phần core thực hiện (phần core được viết bởi C/C++)**
+- Khi có request đến server, nó đẩy event vào **Event Queue**.
+- **Event loop** sẽ nhận lần lượt các event để xử lý.
+- Nếu event đó **không bị Block**, nó tự xử lý rồi trả response lại
+- Còn nếu event đó **bị Block**, Event Loop sẽ đưa công việc qua **Thread Pool**.
+- Sau khi thread pool xử lý xong trả về một **callback function**
+- Callback function sẽ tiếp túc được đẩy vào event queue(không cần phải đợi event queue) và chờ event loop xử lý
+
+  ![event-loop](https://i.imgur.com/siIW46E.png)
+
+---
 
 ## Go Home [click here](./README.md)

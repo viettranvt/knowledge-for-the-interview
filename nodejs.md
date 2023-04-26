@@ -165,8 +165,8 @@
 - **Ngôn ngữ Javascript không thực hiện những công việc ở server-side như đọc file, truy vấn database mà nó ủy quyền cho phần core thực hiện (phần core được viết bởi C/C++)**
 - Khi có request đến server, nó đẩy event vào **Event Queue**.
 - **Event loop** sẽ nhận lần lượt các event để xử lý.
-- Nếu event đó **không bị Block**, nó tự xử lý rồi trả response lại
-- Còn nếu event đó **bị Block**, Event Loop sẽ đưa công việc qua **Thread Pool**.
+- Nếu event đó **không bị Block (Không phải chờ)**, nó tự xử lý rồi trả response lại
+- Còn nếu event đó **bị Block (phải chờ)**, Event Loop sẽ đưa công việc qua **Thread Pool**.
 - Sau khi thread pool xử lý xong trả về một **callback function**
 - Callback function sẽ tiếp túc được đẩy vào event queue(không cần phải đợi event queue) và chờ event loop xử lý
 

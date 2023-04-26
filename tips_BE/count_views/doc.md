@@ -6,4 +6,4 @@
 
 ---
 
-## Go Home [click here](/README)
+## Go Home [click here](../../README.md)

@@ -56,4 +56,4 @@
 - Nếu ứng dụng không giải phóng bộ nhớ đã được cấp phát cho các đối tượng không sử dụng nữa, các đối tượng đó sẽ tiếp tục tồn tại trong bộ nhớ và dần dần sẽ chiếm dụng bộ nhớ hệ thống, gây ra hiện tượng memory leak.
 - Hiện tượng này có thể gây ra sự chậm trễ hoặc đáng kể giảm hiệu suất của ứng dụng và có thể dẫn đến sự cố hệ thống nghiêm trọng.
 
-## Go Home [click here](/README)
+## Go Home [click here](./README.md)

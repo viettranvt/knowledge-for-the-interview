@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const getData = async () => {
+        const keyToken = "xxxx";
+        const getRandomNonce = (num) =>
+          Math.floor(Math.random() + Math.floor(Math.random() * 9 + 1)) *
+          Math.pow(10, num - 1);
+        const genSign = (params) => {
+          const time = Date.now();
+          const nonce = getRandomNonce(20).toString();
+
+          params.time = time;
+          params.nonce = nonce;
+          params.keyToken = keyToken;
+          params.v = "v1";
+
+          const sortKey = [];
+
+          for (const key in params) {
+            if (key !== "sign") {
+              sortKey.push(key);
+            }
+          }
+
+          sortKey.sort(); // sort of ascii
+          let paramsHolder = "";
+
+          sortKey.forEach((key) => {
+            paramsHolder += key + params[key];
+          });
+
+          params.sign = md5(paramsHolder.toString());
+
+          return "?" + new URLSearchParams(params).toString();
+        };
+
+        console.log(
+          await (
+            await fetch(
+              `http://localhost:3000/api/user${genSign({
+                club: "manu",
+              })}`
+            )
+          ).json
+        );
+      };
+    </script>
+  </body>
+</html>

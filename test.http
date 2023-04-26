@@ -1,0 +1,17 @@
+@basicUrl = http://localhost:3000
+###
+
+GET {{basicUrl}}/users?id=10
+
+###
+POST {{basicUrl}}/user
+Content-Type: application/json
+{
+    "username": 1,
+    "password":"12345677"
+}
+
+###
+POST {{basicUrl}}/user
+Content-Type: application/x-www-form-urlencoded
+id=10&age=30

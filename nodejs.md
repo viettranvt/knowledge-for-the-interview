@@ -28,6 +28,16 @@
 
 ---
 
+## Promise
+
+- Các trạng thái của Promise gồm:
+  1. Pending: Trạng thái khi Promise mới được khởi tạo và chưa được giải quyết (resolve) hoặc thất bại (reject).
+  2. Fulfilled: Trạng thái khi Promise đã được giải quyết thành công, có kết quả trả về.
+  3. Rejected: Trạng thái khi Promise bị từ chối, thất bại, có lỗi xảy ra.
+  4. Settled: Trạng thái khi Promise đã được giải quyết (thành công hoặc thất bại), không còn ở trạng thái pending nữa.
+
+---
+
 ## Non-blocking IO
 
 - Non-blocking IO (Input/Output) là một cơ chế trong lập trình cho phép các tiến trình hoạt động mà không phải chờ đợi các hoạt động nhập/xuất hoàn tất.

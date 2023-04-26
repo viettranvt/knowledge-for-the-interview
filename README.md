@@ -1,6 +1,6 @@
 # DEMO NODEJS
 
-- For **Basic NodeJS**, [click here](./nodejs.md) to read more
+- For **Basic JS**, [click here](./nodejs.md) to read more
 - For **Design api structure**, [click here](./api_structure/doc.md) to read more
 - For **Authentication**, [click here](./authentication/doc.md) to read more
 - For **Database**, [click here](./database/doc.md) to read more

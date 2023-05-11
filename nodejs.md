@@ -110,10 +110,25 @@
 
 - Là một hàm được khai báo trong hàm khác và hàm này có thể truy cập và sử dụng biến bên ngoài phạm vi hàm đó.
 
-## Callback là gì
+---
+
+## Callback
 
 - Callback là một hàm được truyền như một tham số cho một hàm khác và được gọi lại (invoke) trong tương lai sau khi một tác vụ hoàn thành.
 - Callback thường được sử dụng để xử lý các tác vụ không đồng bộ (asynchronous) như đọc/ghi file, truy vấn cơ sở dữ liệu, gửi yêu cầu HTTP, và các hoạt động mạng khác.
+
+---
+
+### Function declaration và Function expression
+
+- **Function Declaration**
+  1. Cho phép khai báo một hàm trực tiếp trong phạm vi toàn cục hoặc bên trong một khối mã.
+  2. Được khai báo bằng cú pháp: **function functionName() { // code }**.
+  3. **Hoisting**: Một đặc điểm quan trọng của Function Declaration là nó được kéo lên đầu phạm vi, vì vậy bạn có thể gọi hàm trước khi nó được khai báo trong mã.
+- **Function Expression**
+  1. Là một cách khai báo hàm thông qua việc gán một hàm cho một biến hoặc một thuộc tính của đối tượng.
+  2. Được khai báo bằng cú pháp: **var functionName = function() { // code }** hoặc **const functionName = function() { // code }**.
+  3. **Không có hoisting**: Function Expression không được kéo lên đầu phạm vi, vì vậy bạn cần đảm bảo rằng biến chứa hàm được khai báo trước khi nó được sử dụng trong mã.
 
 ---
 
@@ -148,7 +163,7 @@
 
 ---
 
-## Nodejs là gì ?
+## Nodejs
 
 - là một nền tảng để phát triển ứng dụng web dựa trên nền tảng JavaScrip
 - Nodejs được phát triển theo hướng event driven (Mô hình hướng sự kiện)

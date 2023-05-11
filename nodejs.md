@@ -108,7 +108,12 @@
 
 ## Closure
 
-- LLà một hàm được khai báo trong hàm khác và hàm này có thể truy cập và sử dụng biến bên ngoài phạm vi hàm đó.
+- Là một hàm được khai báo trong hàm khác và hàm này có thể truy cập và sử dụng biến bên ngoài phạm vi hàm đó.
+
+## Callback là gì
+
+- Callback là một hàm được truyền như một tham số cho một hàm khác và được gọi lại (invoke) trong tương lai sau khi một tác vụ hoàn thành.
+- Callback thường được sử dụng để xử lý các tác vụ không đồng bộ (asynchronous) như đọc/ghi file, truy vấn cơ sở dữ liệu, gửi yêu cầu HTTP, và các hoạt động mạng khác.
 
 ---
 
@@ -145,7 +150,7 @@
 
 ## Nodejs là gì ?
 
-- là một nền tảng để phát triển ứng dụng web dựa trên nền tảng tảng JavaScrip
+- là một nền tảng để phát triển ứng dụng web dựa trên nền tảng JavaScrip
 - Nodejs được phát triển theo hướng event driven (Mô hình hướng sự kiện)
 
 ---

@@ -1,10 +1,26 @@
 name: demo github action
 on:
   push:
-    branches: [master]
+    path:
+      - "!README.md"
+      - "!api_structure/**"
+      - "**.js"
+    branches:
+      - "main"
+      - "master"
+      - "release/**"
+      - "!dev"
+  pull_request:
+    type: [opened, reopened, synchronize, labeled, unlabeled]
 jobs:
   demo-github-action:
     runs-on: ubuntu-latest
     steps:
+      # check label
+      - uses: mheap/github-action-required-labels@v4
+        with:
+          mode: exactly
+          count: 0
+          labels: "do not build"
       - run: echo "TODAY=$(date +%d-%m-%y)" >> $GITHUB_ENV
       - run: echo hello this is my github action, today is $TODAY

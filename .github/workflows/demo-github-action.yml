@@ -1,15 +1,16 @@
 name: demo github action
 on:
   push:
-    path:
-      - "!README.md"
-      - "!api_structure/**"
-      - "**.js"
-    branches:
-      - "main"
-      - "master"
-      - "release/**"
-      - "!dev"
+    # path:
+    #   - "!README.md"
+    #   - "!api_structure/**"
+    #   - "**.js"
+    # branches:
+    #   - "main"
+    #   - "master"
+    #   - "release/**"
+    #   - "!dev"
+    branches: !master
   pull_request:
     type: [opened, reopened, synchronize, labeled, unlabeled]
 jobs:

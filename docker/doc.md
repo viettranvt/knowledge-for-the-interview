@@ -28,3 +28,5 @@
   <br> **VD**: docker tag viettran/demo-docker:1.0.0 viettran040898/test_docker:1.0.0
 - **Run command**: docker push **<repository_name_on_docker_hub>**:**< version>**
   <br> **VD**: docker push viettran040898/test_docker:1.0.0
+
+## Go Home [click here](../README.md)

@@ -4,8 +4,10 @@ const cookieParser = require("cookie-parser");
 
 app.use(cookieParser());
 
+// eslint-disable-next-line no-undef
 const port = process.env.PORT || 3000;
 
+// eslint-disable-next-line no-unused-vars
 app.get("/cookies/get", (req, res, next) => {
   //   const cookie = req.headers.cookie;
   const cookie = req.cookies;
@@ -14,6 +16,7 @@ app.get("/cookies/get", (req, res, next) => {
   });
 });
 
+// eslint-disable-next-line no-unused-vars
 app.get("/cookies/set", (req, res, next) => {
   //   res.setHeader("set-cookie", "username=viettran");
   res
@@ -31,6 +34,7 @@ app.get("/cookies/set", (req, res, next) => {
   });
 });
 
+// eslint-disable-next-line no-unused-vars
 app.get("/cookies/del", (req, res, next) => {
   res.clearCookie("blog");
   return res.json({

@@ -5,6 +5,7 @@ console.log(Math.pow(2, 53) === Math.pow(2, 53) + 1); // true :: do vuot qua max
 console.log(BigInt(Math.pow(2, 53)) === BigInt(Math.pow(2, 53)) + BigInt(1)); // true :: do vuot qua max int
 
 // format number
+// eslint-disable-next-line no-unused-vars
 const number = 9_000_000_000;
 
 // filter in array

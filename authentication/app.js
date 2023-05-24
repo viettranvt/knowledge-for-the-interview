@@ -5,6 +5,7 @@ const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
 const expressSession = require("express-session");
 
+// eslint-disable-next-line no-undef
 const port = process.env.PORT || 3000;
 // not suggest => should use redis store
 const store = expressSession.MemoryStore();
@@ -61,12 +62,14 @@ passport.deserializeUser((username, done) => {
   return done(new Error("failed"), null);
 });
 
+// eslint-disable-next-line no-unused-vars
 app.get("/status", (req, res, next) => {
   res.status(200).json({
     msg: "oke",
   });
 });
 
+// eslint-disable-next-line no-unused-vars
 app.get("/profile", (req, res, next) => {
   if (req.isAuthenticated()) {
     res.status(200).json({
@@ -85,6 +88,7 @@ app.post(
     successRedirect: "/profile",
     failureRedirect: "/login",
   }),
+  // eslint-disable-next-line no-unused-vars
   (req, res, next) => {
     try {
       res.status(200).json({

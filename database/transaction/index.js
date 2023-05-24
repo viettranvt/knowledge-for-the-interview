@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 
 mongoose
+  // eslint-disable-next-line no-undef
   .connect(process.env.URI)
   .then(console.log("connected db successfully"))
   .catch((err) => {
@@ -72,6 +73,7 @@ app.post("/transfer", async (res, req) => {
   }
 });
 
+// eslint-disable-next-line no-undef
 app.listen(process.env.PORT || 3000, () => {
   console.log(`server is listening 3000`);
 });

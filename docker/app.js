@@ -16,6 +16,7 @@ app.get("/", (req, res, next) => {
   }
 });
 
+// eslint-disable-next-line no-undef
 const port = process.env.PORT;
 
 if (!port) {

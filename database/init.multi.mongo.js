@@ -44,6 +44,7 @@ function newConnection(uri) {
   }
 }
 
+// eslint-disable-next-line no-undef
 const { URI_1, URI_2 } = process.env;
 const uri1 = newConnection(URI_1);
 const uri2 = newConnection(URI_2);

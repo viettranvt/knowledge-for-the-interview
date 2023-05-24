@@ -14,6 +14,7 @@ const schemaClub = new Schema({
 
 const Club = model("club", schemaClub);
 
+// eslint-disable-next-line no-unused-vars
 const schemaPlayer = new Schema({
   name: {
     type: String,
@@ -31,14 +32,17 @@ const schemaPlayer = new Schema({
 
 const Player = model("player", schemaClub);
 
+// eslint-disable-next-line no-unused-vars
 async function createClub(name, year) {
   console.log(await Club.create({ name, year }));
 }
 
+// eslint-disable-next-line no-unused-vars
 async function createPlayer(name, age, clubId) {
   console.log(await Player.create({ name, age, clubs: clubId }));
 }
 
+// eslint-disable-next-line no-unused-vars
 async function getListUseLookup() {
   const player = await Player.aggregate([
     {
@@ -67,6 +71,7 @@ async function getListUseLookup() {
   console.log(player);
 }
 
+// eslint-disable-next-line no-unused-vars
 async function getListUsePopulate() {
   const player = await Player.find()
     .populate("club", "name year -_id")

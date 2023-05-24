@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+// eslint-disable-next-line no-unused-vars
 const { get, set, setnx, incrBy, decrBy, exists } = require("./redis");
 
 app.get("/order", async (req, res) => {

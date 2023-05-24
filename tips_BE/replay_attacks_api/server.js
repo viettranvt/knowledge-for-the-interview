@@ -1,6 +1,7 @@
 "user strict";
 const { genSign } = require("../utils");
 
+// eslint-disable-next-line no-unused-vars
 const that = (module.exports = {
   listPlayerByClub: async (req, res, next) => {
     try {

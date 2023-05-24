@@ -5,6 +5,6 @@ on:
 jobs:
   demo-github-action:
     runs-on: ubuntu-latest
-      steps:
-        - run: echo "TODAY=$(date +%d-%m-%y)" >> $GITHUB_ENV
-        - run: echo hello this is my github action, today is $TODAY
+    steps:
+      - run: echo "TODAY=$(date +%d-%m-%y)" >> $GITHUB_ENV
+      - run: echo hello this is my github action, today is $TODAY

@@ -292,3 +292,7 @@
   ReactDOM.render(<App />, root);
 </script>
 ```
+
+---
+
+## Go Home [click here](../README.md)

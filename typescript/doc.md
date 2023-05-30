@@ -576,7 +576,9 @@
 ---
 ## SO SÁNH GIỮA INTERFACE VÀ CLASS
  - Một class chỉ có thể có kế thừa một class nhưng có thể implement nhiều interface
+
+voi tra gia tri la undefine con never thi ko
+
 ---
 ## Go Home [click here](../README.md)
 
-voi tra gia tri la undefine con never thi ko

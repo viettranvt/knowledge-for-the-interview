@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      //DOM
+      const h1DOM = document.createElement("h1");
+
+      h1DOM.title = "hello";
+      h1DOM.className = "heading";
+
+      h1DOM.innerText = "Hello guys!";
+
+      document.body.appendChild(h1DOM);
+
+      const h1React = React.createElement(
+        "h1",
+        {
+          title: "hello",
+          className: "heading",
+        },
+        "hello guys 2!"
+      );
+
+      console.dir(h1React);
+      const root = document.getElementById("root");
+      //react-DOM -> render ui
+      ReactDOM.render(h1React, root);
+    </script>
+  </body>
+</html>

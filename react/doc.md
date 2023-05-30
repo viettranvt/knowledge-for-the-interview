@@ -295,4 +295,344 @@
 
 ---
 
+## DOM event
+
+- Component tự định nghĩa phải viết hoa kí tự đầu
+
+  ```html
+  <script type="text/babel">
+    function App() {
+      return (
+        <div className="wrapper">
+          <button
+            onClick={() => {
+              console.log("hello");
+            }}
+          >
+            click me
+          </button>
+        </div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+  ```
+
+- Chọn component trong một object
+
+  ```html
+  <script type="text/babel">
+    const Form = {
+      Input() {
+        return <input />;
+      },
+      CheckBox() {
+        return <input type="checkbox" />;
+      },
+    };
+
+    // solution 1
+    function App() {
+      return (
+        <div className="wrapper">
+          <Form.Input />
+        </div>
+      );
+    }
+
+    //solution 2
+    function App() {
+      const type = "Input";
+      const Component = Form[type];
+
+      return (
+        <div className="wrapper">
+          <Component />
+        </div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+  ```
+
+  ```html
+  <script type="text/babel">
+    function Button({title, href, onClick}) {
+        let Component = "button"
+        const props = {}
+
+        if (href) {
+            Component = "a"
+            props.href = href
+        }
+
+        if (onClick) {
+            props.onClick = onClick
+        }
+
+        return (
+            <Component {...props}>{title}<Component/>
+        )
+    }
+
+    // solution 1
+    function App() {
+      return (
+        <div className="wrapper">
+          <Button
+            title="Clickme"
+            href="https://abc.com"
+            onClick={() => {
+              console.log("abc");
+            }}
+          />
+        </div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+  ```
+
+- Booleans, null & undefined không được render
+
+  ```html
+  <script type="text/babel">
+    function App() {
+      //Not render
+      return <div className="wrapper">{true}</div>;
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+  ```
+
+- Kết hợp toán tử logic để render theo điều kiện
+
+  ```html
+  <script type="text/babel">
+    let firstAccess = true;
+
+    function App() {
+      return (
+        <div className="wrapper">{firstAccess && <h1>Welcome to ...</h1>}</div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+  ```
+
+  ```html
+  <script type="text/babel">
+    let firstAccess = true;
+
+    function App({ title }) {
+      return (
+        <div className="wrapper">
+          <h1>{title || "hello"}</h1>
+        </div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App title="hello" />, root);
+  </script>
+  ```
+
+## Children props & Render props
+
+- Có hai cách truyền Props: string(string literal), biểu thức(expression)
+
+  ```html
+  <script type="text/babel">
+    function Button({title}) {
+        let Component = "button"
+
+        return (
+            <Component>{title}<Component/>
+        )
+    }
+
+    // string literal
+    function App({title}) {
+      return (
+        <div className="wrapper">
+          <Button isPrimary title="hello" />
+        </div>
+      );
+    }
+
+    //expression
+    function App({title}) {
+      const title = "hello";
+
+      return (
+        <div className="wrapper">
+          <Button isPrimary title={title} />
+        </div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App title="hello" />, root);
+  </script>
+  ```
+
+- Props default to true
+
+  ```html
+  <script type="text/babel">
+    //isPrimary = true
+    function Button({title, isPrimary}) {
+        let Component = "button"
+
+        return (
+            <Component>{title}<Component/>
+        )
+    }
+
+
+    function App(title) {
+      const title = "hello";
+
+      return (
+        <div className="wrapper">
+          <Button isPrimary title={title} />
+        </div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App title="hello" />, root);
+  </script>
+  ```
+
+- Pread and rest props
+
+  ```html
+  <script type="text/babel">
+    function Input({ label, ...inputProps }) {
+      return (
+        <div>
+          <label>{label}</label>
+          <input {...inputProps} />
+        </div>
+      );
+    }
+
+    function App() {
+      return (
+        <div className="wrapper">
+          <Input label="Full name" placeholder="Enter name" type="radio" />
+        </div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+  ```
+
+### Children props
+
+- Có hai cách truyền children Props: string(string literal), biểu thức(expression)
+
+- <YourComponent>String literals</YourComponent>
+- <YourComponent>{expression}</YourComponent>
+
+  ```html
+  <script type="text/babel">
+    function Button({children}) {
+        let Component = "button"
+
+        return (
+            <Component>{children}<Component/>
+        )
+    }
+
+    // string literals
+    function App(title) {
+        return (
+            <div className="wrapper">
+                <Button>Click me</Button>
+            </div>
+        );
+    }
+
+    // expression
+    function App() {
+        return (
+            <div className="wrapper">
+                <Button>{click me}</Button>
+            </div>
+        );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App/>, root);
+  </script>
+  ```
+
+### Render props
+
+```html
+<script type="text/babel">
+  function List({ data }) {
+    return (
+      <ul>
+        {data.map((item, i) => (
+          <li key={i}>{item}</li>
+        ))}
+      </ul>
+    );
+  }
+
+  // string literals
+  function App(title) {
+    const cars = ["honda", "toyota"];
+
+    return (
+      <div className="wrapper">
+        <List data={cars} />
+      </div>
+    );
+  }
+
+  const root = document.getElementById("root");
+  ReactDOM.render(<App />, root);
+</script>
+```
+
+```html
+<script type="text/babel">
+  function List({ data, chidlren }) {
+    return <ul>{data.map((item) => children(item))}</ul>;
+  }
+
+  // string literals
+  function App(title) {
+    const cars = ["honda", "toyota"];
+
+    return (
+      <div className="wrapper">
+        <List data={cars}>{(item) => <li key={item}>{item}</li>}</List>
+      </div>
+    );
+  }
+
+  const root = document.getElementById("root");
+  ReactDOM.render(<App />, root);
+</script>
+```
+
+---
+
 ## Go Home [click here](../README.md)

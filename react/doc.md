@@ -635,4 +635,485 @@
 
 ---
 
+## Webpack
+
+- Là công cụ compile các module Javascript. Nó hay được gọi là “module bundler”.
+
+  ![webpack](https://images.viblo.asia/full/9ad58b9d-c2da-4e90-82b0-c1f198632681.png)
+
+---
+
+## NPM VS YARN
+
+- NPM cài package tuần tự, Yarn cài package song song => yarn nhanh hơn
+- NPM cơ chế cache không tốt như yarn. Yarn sẽ có một phân vùng để lưu các pakage đã cài, khi cài lại thì yarn sẽ kiểm tra trong cache nếu có sẽ lấy ra và không tải trên mạng về
+
+---
+
+## HOOKS
+
+- Hook chỉ sử dụng cho function component
+- Dùng hook giúp cho component trở nên đơn giản và dễ hiểu hơn
+  1. Không bị chia logic ra như methods trong lifecycle của class component
+  2. Không cần sử dụng this
+- Quy ước: use<...>
+
+  ```TS
+    import {
+      useState,
+      useEffect,
+      useLayoutEffect,
+      useRef,
+      useCallback,
+      useMemo,
+      useReducer,
+      useContext,
+      useImperativeHandle,
+      useDebugValue,
+    } from 'react'
+  ```
+
+---
+
+## USE STATE
+
+- Giúp đơn giản hóa việc thể hiện trạng thái của dữ liệu ra giao diện người dùng (dữ liệu thay đổi gì giao diện thay đổi đó)
+
+### Khi nào dùng ?
+
+- Khi muốn dữ liệu thay đổi thì giao diện tự động cập nhật (render lại dữ liệu)
+
+  ```TS
+    import {
+      useState,
+    } from 'react'
+
+    function Component() {
+      const [state, setState] = useState(initState)
+    }
+  ```
+
+  ```TS
+  import { useState } from "react";
+  import "./App.css";
+
+  function App() {
+    const [counter, setCounter] = useState<number>(1);
+    const handlerClick = () => {
+      setCounter(counter + 1);
+    };
+
+    return (
+      <div className="App">
+        <h1 style={{ padding: 20 }}>{counter}</h1>
+        <button onClick={handlerClick}>Increase</button>
+      </div>
+    );
+  }
+  ```
+
+  **Lưu ý**:
+
+  - Component được render sau khi `setState`
+  - Initial state chỉ dùng cho lần đầu
+  - Setstate with callback
+
+  ```TS
+    import { useState } from "react";
+    import "./App.css";
+
+    function App() {
+      const [counter, setCounter] = useState<number>(1);
+      const handlerClick = () => {
+        setCounter(counter + 1);
+        setCounter(counter + 1);
+        setCounter(counter + 1);
+      };
+
+      // counter = 1 => after click counter = 2
+      // because current counter = 1
+      // first time  1 + 1 = 2
+      // second time 1 + 1 = 2
+      // third time  1 + 1 = 2
+      // rerender one time
+
+
+      return (
+        <div className="App">
+          <h1 style={{ padding: 20 }}>{counter}</h1>
+          <button onClick={handlerClick}>Increase</button>
+        </div>
+      );
+    }
+  ```
+
+  ```TS
+  import { useState } from "react";
+  import "./App.css";
+
+  function App() {
+    const [counter, setCounter] = useState<number>(1);
+    const handlerClick = () => {
+      setCounter(prevState => prevState + 1);
+      setCounter(prevState => prevState + 1);
+      setCounter(prevState => prevState + 1);
+    };
+
+    // counter = counter + 1
+    // counter = counter + 1
+    // counter = counter + 1
+
+    // => counter = counter + 3
+    // rerender one time
+
+    return (
+      <div className="App">
+        <h1 style={{ padding: 20 }}>{counter}</h1>
+        <button onClick={handlerClick}>Increase</button>
+      </div>
+    );
+  }
+  ```
+
+  - Initial state with callback
+
+  ```TS
+  import { useState } from "react";
+  import "./App.css";
+
+  const gifts: number[] = [100, 200, 300];
+
+  function App() {
+    // do not calculate here, because after rendering the total will be recalculated => affect performance
+    // initial state used only once
+    // const total = order.reduce((total, cur) => total + cur);
+
+    const [counter, setCounter] = useState<number>(() => {
+      return order.reduce((total, cur) => total + cur);
+    });
+    const handlerClick = () => {
+      setCounter((counter) => counter + 1);
+      setCounter((counter) => counter + 1);
+      setCounter((counter) => counter + 1);
+    };
+
+    return (
+      <div className="App">
+        <h1 style={{ padding: 20 }}>{counter}</h1>
+        <button onClick={handlerClick}>Increase</button>
+      </div>
+    );
+  }
+  ```
+
+## Two-way binding (Ràng buộc hai chiều)
+
+- **React là one-way binding**
+- Chiều 1: Giao diện thay đổi => dữ liệu thay đổi
+- Chiều 2: Dữ liệu thay đổi => Giao diện thay đổi
+
+  ```TS
+  import { useState } from "react";
+  import "./App.css";
+
+  function App() {
+    const [name, setName] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+
+    const handleSubmit = () => {
+      console.log(name, email);
+    };
+
+    return (
+      <div className="App">
+        <input value={name} onChange={(e) => setName(e.target.value)} />
+        <input value={email} onChange={(e) => setEmail(e.target.value)} />
+        <button onClick={handleSubmit}>Register</button>
+      </div>
+    );
+  }
+  ```
+
+- Example radio
+
+  ```TS
+  import { useState } from "react";
+  import "./App.css";
+
+  const courses: Object[] = [
+    {
+      id: 1,
+      name: "HTML, CSS",
+    },
+    {
+      id: 2,
+      name: "Javascript",
+    },
+    {
+      id: 3,
+      name: "ReactJS",
+    },
+  ];
+
+  function App() {
+    const [checked, setChecked] = useState<number>(1);
+
+    const handleSubmit = () => {
+      console.log(checked);
+    };
+
+    return (
+      <div className="App">
+        {courses.map((course: any) => {
+          return (
+            <div key={course.id}>
+              <input
+                type="radio"
+                checked={checked === course.id}
+                onChange={() => setChecked(course.id)}
+              />
+              {course.name}
+            </div>
+          );
+        })}
+        <button onClick={handleSubmit}>Register</button>
+      </div>
+    );
+  }
+  ```
+
+- Example checkbox
+
+  ```TS
+  import { useState } from "react";
+  import "./App.css";
+
+  const courses: Object[] = [
+    {
+      id: 1,
+      name: "HTML, CSS",
+    },
+    {
+      id: 2,
+      name: "Javascript",
+    },
+    {
+      id: 3,
+      name: "ReactJS",
+    },
+  ];
+
+  function App() {
+    const [checked, setChecked] = useState<number[]>([]);
+
+    const handleSubmit = () => {
+      console.log(checked);
+    };
+
+    const handleCheck = (id: number): void => {
+      if (checked.includes(id)) {
+        setChecked(checked.filter((data) => data !== id));
+        return;
+      }
+
+      setChecked([...checked, id]);
+    };
+
+    return (
+      <div className="App">
+        {courses.map((course: any) => {
+          return (
+            <div key={course.id}>
+              <input
+                type="checkbox"
+                checked={checked.includes(course.id)}
+                onChange={() => handleCheck(course.id)}
+              />
+              {course.name}
+            </div>
+          );
+        })}
+        <button onClick={handleSubmit}>Register</button>
+      </div>
+    );
+  }
+  ```
+
+---
+
+## MOUNTED / UNMOUNTED
+
+- Mounted là thời điểm đưa một component vào để sử dụng
+- Unmount là thời điểm gỡ một component không sử dụng
+
+---
+
+## USE EFFECT
+
+- Khi muốn thực hiện các side effects
+- useEffect giúp:
+  1. Update DOM
+  2. Call API
+  3. Listen DOM events: scroll, resize
+  4. CleanUp: remove listener / unsubscribe, clear timer
+- callback luôn được gọi sau khi component mounted
+- Cleanup function luôn được gọi trước khi component unmounted
+- useEffect(callback)
+
+  1. Gọi callback mỗi khi component re-render
+  2. Gọi callback sau khi component thêm element vào DOM
+
+  ```TS
+  import { useEffect, useState } from "react";
+
+  const content = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [title, setTitle] = useState<string>("");
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      document.title = title;
+    });
+
+    // Không được viết như này vì nó sẽ chạy trước khi reder dữ liệu, nếu tác vụ nặng nó phải tốn thời gian tính toán trước khi render => làm cho web hiển thị UI chậm.
+    // Thay vào đó ta dùng useEffect để render UI ra trước rối mới bắt đầu tính toán
+    //   document.title = title;
+
+    return (
+      <div>
+        <input value={title} onChange={(e) => setTitle(e.target.value)} />
+      </div>
+    );
+  };
+
+  export default content;
+
+  ```
+
+- useEffect(callback, [])
+
+  1. Chỉ gọi một lần khi component được mounted, re-render sẽ không gọi
+
+  ```TS
+  import { useEffect, useState } from "react";
+
+  const content = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [title, setTitle] = useState<string>("");
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [posts, setPosts] = useState<Object[]>([]);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      fetch(`https://jsonplaceholder.typicode.com/post`)
+        .then((res) => res.json())
+        .then((posts) => setPosts(posts));
+    }, []);
+
+    return (
+      <div>
+        <input value={title} onChange={(e) => setTitle(e.target.value)} />
+        <ul>
+          {posts.map((post: any) => (
+            <li key={post.id}>{post.title}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
+  export default content;
+
+  ```
+
+- useEffect(callback, [dependencies])
+
+  1. callback sẽ được gọi mỗi khi dependencies thay đổi
+
+  ```TS
+  import { useEffect, useState } from "react";
+
+  const tabs = ["posts", "comments", "album"];
+
+  const content = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [title, setTitle] = useState<string>("");
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [posts, setPosts] = useState<Object[]>([]);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [type, setType] = useState<string>(tabs[0]);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+     useEffect(() => {
+      fetch(`https://jsonplaceholder.typicode.com/${type}`)
+        .then((res) => res.json())
+        .then((posts) => setPosts(posts));
+    }, [type]);
+
+    return (
+      <div>
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            style={type === tab ? { color: "white" } : {}}
+            onClick={() => setType(tab)}
+          >
+            {tab}
+          </button>
+        ))}
+        <input value={title} onChange={(e) => setTitle(e.target.value)} />
+        <ul>
+          {posts.map((post: any) => (
+            <li key={post.id}>{post.title}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
+  export default content;
+
+  ```
+
+- useEffect with DOM
+
+  ```TS
+  import { useEffect, useState } from "react";
+
+  const content = () => {
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [showGoToTop, setShowGoToTop] = useState<boolean>(false);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      const handleScroll = () => {
+        if (window.scrollY >= 200) {
+          setShowGoToTop(true);
+          return;
+        }
+
+        setShowGoToTop(false);
+      };
+
+      window.addEventListener("scroll", handleScroll);
+
+      // cleanup function
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }, []);
+
+    return (
+      <div>
+        {showGoToTop && (
+          <button style={{ position: "fixed", right: 20, bottom: 20 }}>
+            Go to top
+          </button>
+        )}
+      </div>
+    );
+  };
+
+  export default content;
+  ```
+
+---
+
 ## Go Home [click here](../README.md)

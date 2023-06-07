@@ -1114,6 +1114,706 @@
   export default content;
   ```
 
+- useEffect with timer function
+
+  ```TS
+  import { useEffect, useState } from "react";
+  import "./App.css";
+
+  function App() {
+    const [countDown, setCountDown] = useState<number>(180);
+    useEffect(() => {
+      const timerId = setInterval(() => {
+        setCountDown((prev) => prev - 1);
+      }, 1000);
+
+      // clear up function
+      return () => {
+        clearInterval(timerId);
+      };
+    }, []);
+
+    return (
+      <div className="App">
+        <h1>{countDown}</h1>
+      </div>
+    );
+  }
+
+  export default App;
+
+  ```
+
+- Cleanup function luôn được gọi trước khi callback được gọi (trừ lần mounted đầu tiên)
+
+  ```TS
+  import { useEffect, useState } from "react";
+  import "./App.css";
+
+  function App() {
+    const [avatar, setAvatar] = useState<number>(1);
+
+    useEffect(() => {
+      console.log(`mounted or render ${count}`);
+      // clear up function
+      return () => {
+        console.log(`cleanup ${count}`);
+      };
+    }, [count]);
+
+    return (
+      <div className="App">
+        <h1>{count}</h1>
+        <button onClick={() => setCount(count + 1)}>click me</button>
+      </div>
+    );
+  }
+
+  export default App;
+
+  ```
+
+  ```TS
+  import { useEffect, useState } from "react";
+  import "./App.css";
+
+  function App() {
+    const [avatar, setAvatar] = useState<any>();
+
+    useEffect(() => {
+      return () => {
+        avatar && URL.revokeObjectURL(avatar.preview);
+      };
+    }, [avatar]);
+
+    const handlePreviewAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files;
+
+      if (files) {
+        const file: any = files[0];
+
+        file["preview"] = URL.createObjectURL(files[0]);
+        setAvatar(file);
+      }
+    };
+
+    return (
+      <div className="App">
+        <input type="file" onChange={handlePreviewAvatar} />
+        {avatar && <img src={avatar.preview} alt="" width="80%" />}
+      </div>
+    );
+  }
+
+  export default App;
+  ```
+
+  ***
+
+## UseEffect & UseLayoutEffect
+
+- UseEffect:
+  1. Cập nhật lại State
+  2. Cập nhật DOM (mutated)
+  3. Render lại UI
+  4. Gọi cleanup nếu dependencies thay đổi
+  5. Gọi useEffect callback
+- UseLayoutEffect:
+  1. Cập nhật lại State
+  2. Cập nhật DOM (mutated)
+  3. Gọi cleanup nếu dependencies thay đổi (sync)
+  4. Gọi useLayoutEffect callback (sync)
+  5. Render lại UI
+
+---
+
+## UseRef
+
+- Lưu các giá trị qua một tham chiếu bên ngoài
+- UseRef sẽ được call ở lần đầu render component. và mỗi khi setState qua useState sẽ dẫn đến rerender component, nhưng set giá trị cho ref thì không.
+- Việc dùng useRef thay vì move biến ra ngoài component(tạo closure) là bởi do logic sẽ cần phải duy trì trong vòng đời của component, nếu move ra closure thì sinh ra nhiều instances của component đó sẽ dùng cùng 1 data(semi global)
+
+- VD: count down number not use useRef => can't stop when clicking stop button, because when component re-render it will call component => create new block scope => current timerId = underfined.
+
+  ```TS
+  import { useState } from "react";
+  import "./App.css";
+
+  function App() {
+    const [count, setCount] = useState<number>(60);
+
+    let timerId: NodeJS.Timer;
+
+    const handleStart = () => {
+      timerId = setInterval(() => {
+        setCount((prev) => prev - 1);
+      }, 1000);
+    };
+    const handleStop = () => {
+      clearInterval(timerId);
+    };
+
+    return (
+      <div className="App">
+        <h1>{count}</h1>
+        <button onClick={handleStart}>start</button>
+        <button onClick={handleStop}>stop</button>
+      </div>
+    );
+  }
+
+  export default App;
+  ```
+
+- Fix it (not recommended)
+
+  ```TS
+  import { useState } from "react";
+  import "./App.css";
+
+  let timerId: NodeJS.Timer;
+
+  function App() {
+    const [count, setCount] = useState<number>(60);
+
+    const handleStart = () => {
+      timerId = setInterval(() => {
+        setCount((prev) => prev - 1);
+      }, 1000);
+    };
+    const handleStop = () => {
+      clearInterval(timerId);
+    };
+
+    return (
+      <div className="App">
+        <h1>{count}</h1>
+        <button onClick={handleStart}>start</button>
+        <button onClick={handleStop}>stop</button>
+      </div>
+    );
+  }
+
+  export default App;
+  ```
+
+- VD: Count down using useRef
+
+  ```TS
+  import { useEffect, useRef, useState } from "react";
+  import "./App.css";
+
+  function App() {
+    const [count, setCount] = useState<number>(60);
+    const ref = useRef<number>();
+    const prevCount = useRef<number>();
+    const h1Ref = useRef<any>();
+
+    useEffect(() => {
+      prevCount.current = count;
+    }, [count]);
+
+    useEffect(() => {
+      // view element
+      console.log(h1Ref.current);
+    });
+
+    const handleStart = () => {
+      const timerId = setInterval(() => {
+        setCount((prev) => prev - 1);
+      }, 1000);
+
+      ref.current = Number(timerId);
+    };
+    const handleStop = () => {
+      clearInterval(ref.current);
+    };
+
+    return (
+      <div className="App">
+        {/* add prop ref to get element */}
+        <h1 ref={h1Ref}>{count}</h1>
+        <button onClick={handleStart}>start</button>
+        <button onClick={handleStop}>stop</button>
+      </div>
+    );
+  }
+
+  export default App;
+
+  ```
+
+---
+
+## REACT.memo() - Hign Order component(HOC)
+
+- Ghi nhớ các props của một component để từ đó quyết định có re-render lại component hay không
+
+  ```TS
+  <!-- content.tsx -->
+  import { memo } from "react";
+
+  function Content() {
+    return <h2>Hello</h2>;
+  }
+
+  export default memo(Content);
+  ```
+
+  ```TS
+  <!-- app.tsx -->
+  import { useState } from "react";
+  import "./App.css";
+  import Content from "./content";
+
+  function App() {
+    const [count, setCount] = useState<number>(0);
+
+    const handleClick = () => {
+      setCount((prev) => prev + 1);
+    };
+
+    return (
+      <div className="App">
+        {/* add prop ref to get element */}
+        <Content />
+        <h1>{count}</h1>
+        <button onClick={handleClick}>click</button>
+      </div>
+    );
+  }
+
+  export default App;
+
+  ```
+
+  - Ở vd này ta thấy component đang là đếm số và ta thấy khi click đếm số thì component con (content) cũng bị render lại dùng không liên quan đến biến đếm
+  - Ta sử dụng **memo()** cho component content. React sẽ kiểm tra nếu props của component content thay đổi thì mới re-render lại còn không sẽ không re-render
+
+---
+
+## useCallback()
+
+- Giúp tránh tạo ra những hàm mới một cách không cần thiết trong function component
+
+  ```TS
+  <!-- content.tsx -->
+  import { memo } from "react";
+
+  interface Props {
+    onIncrease: () => void;
+  }
+
+  function Content({ onIncrease }: Props) {
+    return (
+      <div>
+        <h2>Hello</h2>
+        <button onClick={onIncrease}>click</button>
+      </div>
+    );
+  }
+
+  export default memo(Content);
+  ```
+
+  ```TS
+  <!-- app.tsx -->
+  import { useCallback, useState } from "react";
+  import "./App.css";
+  import Content from "./content";
+
+  function App() {
+    const [count, setCount] = useState<number>(0);
+
+    const handleIncrease = useCallback(() => {
+      setCount((prev) => prev + 1);
+    }, []);
+
+    return (
+      <div className="App">
+        {/* add prop ref to get element */}
+        <Content onIncrease={handleIncrease} />
+        <h1>{count}</h1>
+      </div>
+    );
+  }
+
+  export default App;
+  ```
+
+- Ta thấy khi nhấn thì content lại re-render trong khi đã dùng react.memo và nội dung content không thay đổi
+- Vì funtion handleIncrease là một **reference types**, khi render lại sẽ tạo ra một function handleIncmớirease mới không liên quan gì function handleIncmớirease cũ nên khi react memo so sánh (===) thì nó sẽ thấy địa chỉ khác nhau => re-render
+- useCallback sẽ lưu tham chiếu của hàm trong lần render đầu tiên và return lại tham chiếu cho biến **handleIncrease** . Khi UI re-render thì useCallback sẽ trả lại tham chiếu trước đó và không tạo ra hàm mới
+- useCallback phải đi chung với react.memo. Vì không có react.memo nó sẽ tự re-render lại.
+
+---
+
+## useMemo()
+
+- Tránh thực hiện lại một logic không thiết
+
+```TS
+import { useState } from "react";
+import "./App.css";
+interface Product {
+  name: string;
+  price: number;
+}
+
+function App() {
+  const [name, setName] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [products, setProducts] = useState<Product[]>([]);
+
+  const handleSubmit = () => {
+    setProducts([...products, { price: +price, name: name }]);
+  };
+
+  const total = products.reduce((result, prod) => result + prod.price, 0);
+
+  return (
+    <div className="App">
+      <input
+        value={name}
+        placeholder="Enter name ..."
+        onChange={(e) => setName(e.target.value)}
+      />
+      <br />
+      <input
+        value={price}
+        placeholder="Enter price ..."
+        onChange={(e) => setPrice(e.target.value)}
+      />
+      <br />
+      <button onClick={handleSubmit}>Add</button>
+      <br />
+      Total: {total}
+      <ul>
+        {products.map((product, index) => (
+          <li key={index}>
+            {product.name} - {product.price}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+- Ở vd này tại thấy khi nhập giá và tên thì sẽ bị re-render lại và gọi hàm tính total. Điều sẽ vô nghĩa với hàm tính total vì hàm total chỉ quan tâm product có bị thay đổi hay không
+
+```TS
+import { useState } from "react";
+import "./App.css";
+interface Product {
+  name: string;
+  price: number;
+}
+
+function App() {
+  const [name, setName] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [products, setProducts] = useState<Product[]>([]);
+
+  const handleSubmit = () => {
+    setProducts([...products, { price: +price, name: name }]);
+  };
+
+  const total = products.reduce((result, prod) => result + prod.price, 0);
+
+  return (
+    <div className="App">
+      <input
+        value={name}
+        placeholder="Enter name ..."
+        onChange={(e) => setName(e.target.value)}
+      />
+      <br />
+      <input
+        value={price}
+        placeholder="Enter price ..."
+        onChange={(e) => setPrice(e.target.value)}
+      />
+      <br />
+      <button onClick={handleSubmit}>Add</button>
+      <br />
+      Total: {total}
+      <ul>
+        {products.map((product, index) => (
+          <li key={index}>
+            {product.name} - {product.price}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+- Cách khắc phục
+
+```TS
+import { useMemo, useRef, useState } from "react";
+import "./App.css";
+interface Product {
+  name: string;
+  price: number;
+}
+
+function App() {
+  const [name, setName] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const nameRef = useRef<HTMLInputElement>(null);
+
+  const handleSubmit = () => {
+    setProducts([...products, { price: +price, name: name }]);
+    setName("");
+    setPrice("");
+    nameRef.current?.focus();
+  };
+
+  const total = useMemo(() => {
+    return products.reduce((result, prod) => result + prod.price, 0);
+  }, [products]);
+
+  return (
+    <div className="App">
+      <input
+        ref={nameRef}
+        value={name}
+        placeholder="Enter name ..."
+        onChange={(e) => setName(e.target.value)}
+      />
+      <br />
+      <input
+        value={price}
+        placeholder="Enter price ..."
+        onChange={(e) => setPrice(e.target.value)}
+      />
+      <br />
+      <button onClick={handleSubmit}>Add</button>
+      <br />
+      Total: {total}
+      <ul>
+        {products.map((product, index) => (
+          <li key={index}>
+            {product.name} - {product.price}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+---
+
+## useReducer
+
+- Là một phiên bản nâng cao của useState
+- Phù hợp với state phức tạp(mảng chứa mảng con, object nhiều cấp)
+- VD: Count number
+- useState
+
+  ```TS
+  import { useState } from "react";
+  import "./App.css";
+
+  function App() {
+    const [count, setCount] = useState<number>(0);
+
+    return (
+      <div className="App">
+        <h1>{count}</h1>
+        <button onClick={() => setCount(count - 1)}>Down</button>
+        <button onClick={() => setCount(count + 1)}>Up</button>
+      </div>
+    );
+  }
+
+  export default App;
+
+  ```
+
+- useProducer
+
+  ```TS
+  import { useReducer } from "react";
+  import "./App.css";
+
+  //init state
+  const initState = 0;
+
+  //actions
+  const UP_ACTION = "UP";
+  const DOWN_ACTION = "DOWN";
+
+  //reducer
+  const reducer = (state: number, action: string) => {
+    switch (action) {
+      case UP_ACTION:
+        return state + 1;
+      case DOWN_ACTION:
+        return state - 1;
+      default:
+        throw new Error("Invalid action");
+    }
+  };
+
+  function App() {
+    const [count, dispatch] = useReducer(reducer, initState);
+
+    return (
+      <div className="App">
+        <h1>{count}</h1>
+        <button onClick={() => dispatch(DOWN_ACTION)}>Down</button>
+        <button onClick={() => dispatch(UP_ACTION)}>Up</button>
+      </div>
+    );
+  }
+
+  export default App;
+  ```
+
+---
+
+## Context & useContext
+
+- Context
+
+1.  Giúp truyền dữ liệu từ component cha xuống component con mà không cần sử dụng props
+    VD: Truyền dữ liệu từ app xuống paragraph
+
+    - Use state
+
+    ```TS
+    <!-- app.tsx -->
+    import { useState } from "react";
+    import "./App.css";
+    import Content from "./Content";
+
+    function App() {
+    const [theme, setTheme] = useState<string>("dark");
+    const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+    };
+
+        return (
+          <div className="App">
+            <button onClick={toggleTheme}>Toggle theme</button>
+            <Content theme={theme} />
+          </div>
+        );
+
+    }
+
+    export default App;
+    ```
+
+    ```TS
+    <!-- content.tsx -->
+    import { FC } from "react";
+    import Paragraph from "./Paragraph";
+
+    interface Props {
+      theme: string;
+    }
+
+    const Content: FC<Props> = ({ theme }) => {
+      return (
+        <div>
+          <Paragraph theme={theme} />
+        </div>
+      );
+    };
+
+    export default Content;
+    ```
+
+    ```TS
+    <!-- paragraph.tsx -->
+    import React, { FC } from "react";
+    import "./App.css";
+
+    interface Props {
+      theme: string;
+    }
+
+    const Paragraph: FC<Props> = ({ theme }) => {
+      return <p className={theme}>Paragraph</p>;
+    };
+
+    export default Paragraph;
+    ```
+
+    - Use context
+
+    ```TS
+    <!-- app.tsx -->
+    import { createContext, useState } from "react";
+    import "./App.css";
+    import Content from "./Content";
+
+    export const ThemeContext = createContext("dark");
+
+    function App() {
+      const [theme, setTheme] = useState<string>("dark");
+      const toggleTheme = () => {
+        setTheme(theme === "dark" ? "light" : "dark");
+      };
+
+      return (
+        <ThemeContext.Provider value={theme}>
+          <div className="App">
+            <button onClick={toggleTheme}>Toggle theme</button>
+            <Content />
+          </div>
+        </ThemeContext.Provider>
+      );
+    }
+
+    export default App;
+    ```
+
+    ```TS
+    <!-- paragraph.tsx -->
+    import { useContext } from "react";
+    import "./App.css";
+    import { ThemeContext } from "./App";
+
+    const Paragraph = () => {
+      const theme = useContext(ThemeContext);
+      return <p className={theme}>Paragraph</p>;
+    };
+
+    export default Paragraph;
+    ```
+
+---
+
+## Redux & React-context
+
+- Những điểm Redux hơn react Context
+  1. Dễ dàng debug vì redux có thư viện debug
+  2. Redux có kiến trúc để apply middleware
+  3. Redux có addons để để dàng mở rộng (addons and extensibility)
+  4. Redux là cross-platfrom(đa nền tảng), không phụ thuộc vào react
+  5. Redux có thể dễ dàng cấu hình và performance hơn so với react context
+
+---
+
+- use rafce to generate componet in vscode
+
 ---
 
 ## Go Home [click here](../README.md)

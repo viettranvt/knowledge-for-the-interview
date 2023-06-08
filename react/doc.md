@@ -1812,6 +1812,149 @@ export default App;
 
 ---
 
+## useImperativeHandle
+
+- Giúp tùy chỉnh ref của một function component
+
+  ```TS
+  <!-- video.tsx -->
+  import { forwardRef } from "react";
+
+  const Video = (props: any, ref: React.LegacyRef<HTMLVideoElement>) => {
+    return <video ref={ref} src={require("./videos/download.mp4")} />;
+  };
+
+  export default forwardRef(Video);
+  ```
+
+  ```TS
+  <!-- app.stx -->
+  import { useRef } from "react";
+  import "./App.css";
+  import Video from "./Video";
+
+  function App() {
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    const handlePlay = () => {
+      videoRef.current?.play();
+    };
+
+    const handlePause = () => {
+      videoRef.current?.pause();
+    };
+
+    return (
+      <div className="App">
+        <Video ref={videoRef} />
+        <button onClick={handlePlay}>Play</button>
+        <button onClick={handlePause}>Pause</button>
+      </div>
+    );
+  }
+
+  export default App;
+  ```
+
+- Ta thấy nếu làm như này sẽ public toàn bộ thuộc tính của ref ra component của cha trong khi ta chỉ muốn play và pause thồi => component cha có thể tương tác nhiều hơn với ref video và có thể phá hỏng component video
+- Cách khắc phục
+
+  ```TS
+  <!-- video.tsx -->
+  import { forwardRef, useImperativeHandle, useRef } from "react";
+
+  const Video = (props: any, ref: any) => {
+    const videoRef = useRef<HTMLVideoElement>(null);
+    useImperativeHandle(ref, () => ({
+      play() {
+        videoRef.current?.play();
+      },
+      pause() {
+        videoRef.current?.pause();
+      },
+    }));
+
+    return <video ref={videoRef} src={require("./videos/download.mp4")} />;
+  };
+
+  export default forwardRef(Video)
+  ```
+
+  ```TS
+  <!-- app.tsx -->
+  import { useRef } from "react";
+  import "./App.css";
+  import Video from "./Video";
+
+  function App() {
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    const handlePlay = () => {
+      videoRef.current?.play();
+    };
+
+    const handlePause = () => {
+      videoRef.current?.pause();
+    };
+
+    return (
+      <div className="App">
+        <Video ref={videoRef} />
+        <button onClick={handlePlay}>Play</button>
+        <button onClick={handlePause}>Pause</button>
+      </div>
+    );
+  }
+
+  export default App;
+  ```
+
+---
+
+## React router dom
+
+- Là một thư viện tạo bộ định tuyến cho các ứng dụng được viết bởi ReactJS
+- VD
+
+  ```TS
+  import { Link, Route, Routes } from "react-router-dom";
+  import "./App.css";
+  import Home from "./pages/Home";
+  import New from "./pages/News";
+  import Contact from "./pages/Contact";
+
+  function App() {
+    return (
+      <div className="App">
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/news">News</Link>
+            </li>
+            <li>
+              <Link to="/contact">Contact</Link>
+            </li>
+          </ul>
+        </nav>
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/news" element={<New />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </div>
+    );
+  }
+
+  export default App;
+
+  ```
+
+---
+
 - use rafce to generate componet in vscode
 
 ---

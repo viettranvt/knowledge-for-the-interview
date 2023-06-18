@@ -1959,4 +1959,33 @@ export default App;
 
 ---
 
+## Prop-Types
+
+- Là một thư viện giúp kiểm tra kiểu tra prop nằm trong react component
+- Nó sẽ kiểm tra trong lúc chương trình chạy. Nếu có lỗi sẽ báo ngay
+  VD:
+
+  ```TS
+  import clsx from 'clsx';
+  import styles from './AccountItem.module.scss';
+  import PropTypes from 'prop-types';
+
+  const faCheckCircleIcon = faCheckCircle as IconProp;
+
+  function AccountItem({ data }) {
+    return (
+      <!-- ... -->
+    );
+  }
+
+  AccountItem.prototype = {
+    data: PropTypes.object.isRequired,
+  };
+
+  export default AccountItem;
+
+  ```
+
+---
+
 ## Go Home [click here](../README.md)

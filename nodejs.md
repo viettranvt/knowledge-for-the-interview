@@ -18,6 +18,222 @@
 
 ---
 
+## Bind
+
+- Chỉ định đối tượng cho một phương thức
+- Phương thức Bind sẽ trả về một hàm mới
+
+  ```JS
+  const teacher = {
+    firstName: "a",
+    lastName: "b",
+    getFullName() {
+      return `${this.firstName} ${this.lastName}`
+    }
+  }
+
+  const student = {
+    firstName: "c",
+    lastName: "d",
+  }
+
+  console.log(teacher.getFullName()) // a b
+
+  const getStudentName = teacher.getFullName.bind(student)
+  console.log(getStudentName()) // c d
+  ```
+
+- Có thể nhận đối số như hàm ban đầu
+
+  ```JS
+  const teacher = {
+    firstName: "a",
+    lastName: "b",
+    getFullName(data1, data2) {
+      console.log(${data1} ${data2})
+      return `${this.firstName} ${this.lastName}`
+    }
+  }
+
+  const student = {
+    firstName: "c",
+    lastName: "d",
+  }
+
+  console.log(teacher.getFullName())
+  // undefined undefined
+  // a b
+
+  const getStudentName = teacher.getFullName.bind(student, "abc", "cde")
+  console.log(getStudentName("def", "ghi"))
+  // Giá trị truyền vào bind sẽ ưu tiên hơn
+  // "abc" "cde"
+  // c d
+  ```
+
+---
+
+## Call
+
+- Là phương thức trong prototype của function contructor, phương thức này được dùng để gọi hàm và cũng có thể bind this cho hàm
+- Call sẽ bind this gọi luôn hàm
+
+  ```JS
+    function random() {
+      console.log(Math.random())
+    }
+
+    random.call()
+  ```
+
+- Gọi hàm và bind this, trong strict mode vẫn có this nếu được bind
+
+  ```JS
+    'use strict'
+    this.firstName: "a",
+    this.lastName: "b",
+
+    showFullName() {
+      console.log(`${this.firstName} ${this.lastName}`)
+    }
+
+    showFullName() // cannor read  propety firstName ..., because in strict mode there is no this
+    showFullName.call() // cannor read  propety firstName ..., because in strict mode there is no this
+    showFullName.call(this) // a b
+  ```
+
+- Thể hiện tính kế thừa trong oop
+
+  ```JS
+    function Animal(name, weight) {
+      this.name = name
+      this.weight = weight
+    }
+
+    function Chicken(name, weight, legs) {
+      Animal.call(this, name, weight)
+      this.legs = legs
+    }
+
+    const chicken = new Chicken('Vit', 66, 2)
+    console.log(chicken)
+  ```
+
+- Mượn hàm (function borrowing)
+
+  ```JS
+    const teacher = {
+      firstName: "a",
+      lastName: "b",
+      showFullName() {
+        console.log(`${this.firstName} ${this.lastName}`)
+      }
+    }
+
+    const student = {
+      firstName: "c",
+      lastName: "d",
+    }
+
+    teacher.showFullName.call(teacher) //a b
+    teacher.showFullName.call(student) //c d
+  ```
+
+- Làm việc với arguments
+
+  ```JS
+  function logger() {
+    Array.prototype.forEach.call(arguments, item => {
+      console.log(item)
+    })
+
+    // solution 1
+    const arr = Array.from(arguments)
+    console.log(arr)
+
+    // solution 2
+    const arr1 = [...arguments]
+    console.log(arr1)
+  }
+
+  logger(1,2,3,4,5)
+  ```
+
+---
+
+## Apply
+
+- Cũng giống call apply là phương thức trong prototype của function contructor, phương thức này được dùng để gọi hàm và cũng có thể bind this cho hàm, Nhưng đối số nhận vào là một mảng
+
+  ```JS
+  const teacher = {
+    firstName: "a",
+    lastName: "b",
+  }
+
+  function greet(greeting, message) {
+    return `${greeting} ${this.firstName} ${this.lastName} ${message}`
+  }
+
+  let result = greet.apply(teacher, ["hello", 'bye'])
+  console.log(result) // hello a b bye
+  ```
+
+- Mượn hàm (function borrowing)
+
+  ```JS
+    const teacher = {
+      firstName: "a",
+      lastName: "b",
+      showFullName() {
+        console.log(`${this.firstName} ${this.lastName}`)
+      }
+    }
+
+    const student = {
+      firstName: "c",
+      lastName: "d",
+    }
+
+    teacher.showFullName.apply(teacher) //a b
+    teacher.showFullName.apply(student) //c d
+  ```
+
+- Thể hiện tính kế thừa trong oop
+
+  ```JS
+    function Animal(name, weight) {
+      this.name = name
+      this.weight = weight
+    }
+
+    function Chicken(name, weight, legs) {
+      Animal.apply(this, arguments)
+      this.legs = legs
+    }
+
+    const chicken = new Chicken('Vit', 66, 2)
+    console.log(chicken)
+  ```
+
+---
+
+## So sánh bind call và apply
+
+- Giống nhau: đều là phương thức kế thừa từ Function prototype
+- Khác nhau:
+- Bind trả ra một hàm mới
+- Bind không gọi hàm
+- Nếu Bind kèm arguments thì các đối số này sẽ được ưu tiên hơn
+
+- Call thực hiện bind và gọi hàm
+- Nhận các đối số của hàm gốc bằng đối số thứ hai `arg1, arg2...`
+
+- Apply cũng thực hiện bind và gọi hàm
+- Nhận các đối số của hàm gốc bằng đối số thứ hai dưới dạng mảng `[arg1, arg2, ...]`
+
+---
+
 ## V8 engine
 
 - V8 engine là một engine JavaScript mã nguồn mở, được sử dụng để biên dịch và thực thi mã JavaScript trên các trình duyệt web
@@ -32,11 +248,11 @@
 - Event loop sẽ đưa từng tác vụ vào **call stack** để xử lý.
 - Nếu tác vụ đồng bộ thì sẽ được thực thi ngay
 - Còn nếu tác vụ bất đồng bộ sẽ được đẩy qua cho **WebAPIs/BrowserApis/NodeApis** để xử lý và trả kết quả vào trong **callback queue**
-- Trong back queue sẽ có 2 ngăn bao gồm: **micro task** và **macro task**
+- Trong callback queue sẽ có 2 ngăn bao gồm: **micro task** và **macro task**
   1. Macro task bao gồm: setTimeout, setInterval, setImmediate, requestAnimationFrame, I/O, UI rendering
   2. Micro task bao gồm: process.nextTick, Promises, queueMicrotask, MutationObserver
 - Về độ ưu tiên thì micro task sẽ được ưu tiên hơn macrotask
-- Event loop sẽ kiểm tra trong call stask còn tác vụ nào đang thực thi hay không, Nếu không nó sẽ đưa tác vụ từ trong call queue (cụ thể là các tác vụ trong micro task trước, nếu micro task hết mới tới lượt macro task) vào trong call stack để thực thi
+- Event loop sẽ kiểm tra trong call stask còn tác vụ nào đang thực thi hay không, Nếu không nó sẽ đưa tác vụ từ trong calback queue (cụ thể là các tác vụ trong micro task trước, nếu micro task hết mới tới lượt macro task) vào trong call stack để thực thi
 
 ---
 
@@ -92,7 +308,7 @@
 
 ---
 
-## Promise vs Async/Await:
+## Promise vs Async/Await
 
 1. **Promise**
 
@@ -165,7 +381,7 @@
 
 ## Nodejs
 
-- là một nền tảng để phát triển ứng dụng web dựa trên nền tảng JavaScrip
+- là một nền tảng để phát triển ứng dụng web dựa trên nền tảng JavaScript
 - Nodejs được phát triển theo hướng event driven (Mô hình hướng sự kiện)
 
 ---

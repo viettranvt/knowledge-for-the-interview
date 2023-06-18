@@ -51,7 +51,7 @@
 
 - Thường dùng để thiết kế lưu comment, đánh giá
 - Thay vì lưu hết data và trong document thì ta chĩ nên lưu những data thường xuyên được sử dụng còn các data khác sẽ lưu trong một bảng khác khi có nhu cầu sẽ truy vấn sau
-- **Trước khi dùng Subset**: Tất cả thông tin được lưu trong một document. Giả sử một bài post đang nhiều comment và khi comment này nhiều lên => VDbài post có 50000000 comment thì lúc đó document sẽ tới giới hạn lưu trữ (16MB), hoặc thông tin được lên bộ nhớ đệm quá nhiều dẫn đến giảm hiệu năng và người dùng cũng không có nhu cầu xem hết.
+- **Trước khi dùng Subset**: Tất cả thông tin được lưu trong một document. Giả sử một bài post đang nhiều comment và khi comment này nhiều lên => VD bài post có 50000000 comment thì lúc đó document sẽ tới giới hạn lưu trữ (16MB), hoặc thông tin được lên bộ nhớ đệm quá nhiều dẫn đến giảm hiệu năng và người dùng cũng không có nhu cầu xem hết.
 
   ![bucket](https://i.imgur.com/KKIcyPI.png)
 
